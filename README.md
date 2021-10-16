@@ -27,7 +27,7 @@ import dobbi
 
 ## Interaction
 
-The library uses method chaining in order to simplify tasks processing:
+The library uses method chaining in order to simplify text processing:
 
 ```Python
 dobbi.clean()\
