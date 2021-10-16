@@ -7,11 +7,29 @@ An open-source NLP library: fast text cleaning and preprocessing.
 This library provides a quick and ready-to-use text preprocessing tools for text cleaning and normalization.
 You can simply remove hashtags, nicknames, emoji, url addresses, punctuation, whitespace and etc.
 
+## Installation
+
+###  Getting it
+
+To download dobbi, either fork this github repo or simply use Pypi via pip.
+
+```sh
+$ pip install dobbi
+```
+
+# Usage
+
+Import the library.
+
+```Python
+import dobbi
+```
+
 ## Interaction
 
 The library uses method chaining in order to simplify tasks processing:
 
-```
+```Python
 dobbi.clean()\
     .hashtag()\
     .nickname()\
@@ -35,7 +53,7 @@ The library supports the following patterns:
 
 1) Clean a twitter message
 
-```
+```Python
 dobbi.clean()\
     .hashtag()\
     .nickname()\
@@ -47,7 +65,7 @@ Result: 'Why is so funny? Check here:'
 
 2) Replace nickname and url with tokens
 
-```
+```Python
 dobbi.replace()\
     .hashtag('')\
     .nickname()\
@@ -59,7 +77,7 @@ Result: 'Why TOKEN_NICKNAME is so funny? Check here: CUSTOM_URL_TOKEN'
 
 3) Get text cleanup function
 
-```
+```Python
 func = dobbi.clean().url().hashtag().punctuation().whitespace().html().function()
 func('\t #fun #lol    Why  @Alex33 is so... funny? <tag> \nCheck\there: https://some-url.com')
 ```
