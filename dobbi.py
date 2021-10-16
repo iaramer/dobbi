@@ -426,4 +426,4 @@ def get_sock() -> None:
 
     :return: ???
     """
-    print('Dobby has got a sock. Master threw it, and Dobby caught it, and Dobby – Dobby is free.')
+    print('Dobby has got a sock. Master threw it, and Dobby caught it, and Dobby – Dobby is free!')
