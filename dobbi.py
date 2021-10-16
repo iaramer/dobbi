@@ -92,7 +92,7 @@ class CleanJob(Job):
     An internal class for performing a clean.
     """
 
-    def function(self, rm_whitespace=True, lower=True) -> Callable:
+    def function(self, rm_whitespace=True, lower=False) -> Callable:
         """
         Creates a function, which is a combination of previously selected chained functions.
 
@@ -113,7 +113,7 @@ class CleanJob(Job):
 
         return _func
 
-    def execute(self, string: str, rm_whitespace=True, lower=True) -> str:
+    def execute(self, string: str, rm_whitespace=True, lower=False) -> str:
         """
         Returns a final string. Use this method to get an answer.
 
@@ -255,7 +255,7 @@ class ReplaceJob(Job):
     An internal class for performing words replacement.
     """
 
-    def function(self, rm_whitespace=True, lower=True) -> Callable:
+    def function(self, rm_whitespace=True, lower=False) -> Callable:
         """
         Creates a function, which is a combination of previously selected chained functions.
 
@@ -276,7 +276,7 @@ class ReplaceJob(Job):
 
         return _func
 
-    def execute(self, string: str, rm_whitespace=True, lower=True) -> str:
+    def execute(self, string: str, rm_whitespace=True, lower=False) -> str:
         """
         Returns a final string. Use this method to get an answer.
 
