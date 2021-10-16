@@ -5,12 +5,12 @@ setup(
     py_modules=['dobbi'],
     version='0.01',
     license='Apache License 2.0',
-    description='An open-source library for fast NLP text cleaning and preprocessing.',
+    description='An open-source NLP library: fast text cleaning and preprocessing',
     author='Iaroslav Amerkhanov',
     author_email='amerkhanov.y@gmail.com',
     url='https://github.com/iaramer/dobbi',
     download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_01.tar.gz',
-    keywords=['nlp', 'text', 'string', 'preprocessing', 'cleaning', 'regexp'],
+    keywords=['nlp', 'text', 'string', 'regexp', 'preprocess', 'clean'],
     classifiers=[
         'Development Status :: 3 - Alpha',
 

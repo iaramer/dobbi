@@ -1,4 +1,42 @@
+"""
+This library provides a quick and ready-to-use text preprocessing tools for text cleaning and normalization.
+You can simply remove hashtags, nicknames, emoji, url addresses, punctuation, whitespace and etc.
+
+Examples:
+
+1) Clean a twitter message
+
+dobbi.clean()\
+    .hashtag()\
+    .nickname()\
+    .url()\
+    .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
+
+Result: 'Why is so funny? Check here:'
+
+2) Replace nickname and url with tokens
+
+dobbi.replace()\
+    .hashtag('')\
+    .nickname()\
+    .url('CUSTOM_URL_TOKEN')\
+    .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
+
+Result: 'Why TOKEN_NICKNAME is so funny? Check here: CUSTOM_URL_TOKEN'
+
+3) Get text cleanup function
+
+func = dobbi.clean().url().hashtag().punctuation().whitespace().html().function()  # One-liner is less readable.
+func('\t #fun #lol    Why  @Alex33 is so... funny? <tag> \nCheck\there: https://some-url.com')
+
+Result: 'Why Alex33 is so funny Check here'
+
+Please pay attention that the functions are applied in the order you specify.
+So, chain .punctuation() as one of the last functions.
+"""
+
 from __future__ import annotations
+
 import re
 from abc import ABC, abstractmethod
 from typing import Callable
@@ -54,36 +92,41 @@ class CleanJob(Job):
     An internal class for performing a clean.
     """
 
-    def function(self, rm_whitespace=True) -> Callable:
+    def function(self, rm_whitespace=True, lower=True) -> Callable:
         """
         Creates a function, which is a combination of previously selected chained functions.
 
+        :param lower: If the resulting string should be lowercase.
+        :param rm_whitespace: If the extra whitespace should be removed.
         :return: A function that is the combination of previously chosen chained functions.
         """
-        def _rm_whitespace(s_: str) -> str:
-            return ' '.join(s_.split())
+
         if rm_whitespace:
-            self.f.append(_rm_whitespace)
+            self.f.append(lambda x: ' '.join(x.split()))
+        if lower:
+            self.f.append(lambda x: x.lower())
 
         def _func(s_) -> Callable:
             for func in self.f:
                 s_ = func(s_)
             return s_
+
         return _func
 
-    def execute(self, string: str, rm_whitespace=True) -> str:
+    def execute(self, string: str, rm_whitespace=True, lower=True) -> str:
         """
         Returns a final string. Use this method to get an answer.
 
+        :param lower: If the resulting string should be lowercase.
         :param string: The string to process.
-        :param rm_whitespace: if the extra whitespace should be removed.
+        :param rm_whitespace: If the extra whitespace should be removed.
         :return: The cleaned string.
         """
 
-        def _rm_whitespace(s_: str) -> str:
-            return ' '.join(s_.split())
         if rm_whitespace:
-            self.f.append(_rm_whitespace)
+            self.f.append(lambda x: ' '.join(x.split()))
+        if lower:
+            self.f.append(lambda x: x.lower())
 
         for func in self.f:
             string = func(string)
@@ -195,10 +238,10 @@ def clean() -> CleanJob:
 
     Example:
 
-    dobbi.clean('Why #damn @alex33 is so harmful?')\
+    dobbi.clean()\
         .hashtag()\
-        .mickname()\
-        .finish()
+        .nickname()\
+        .execute('Why #damn @alex33 is so harmful?')
 
     Result:
 
@@ -212,36 +255,41 @@ class ReplaceJob(Job):
     An internal class for performing words replacement.
     """
 
-    def function(self, rm_whitespace=True) -> Callable:
+    def function(self, rm_whitespace=True, lower=True) -> Callable:
         """
         Creates a function, which is a combination of previously selected chained functions.
 
+        :param lower: If the resulting string should be lowercase.
+        :param rm_whitespace: If the extra whitespace should be removed.
         :return: A function that is the combination of previously chosen chained functions.
         """
-        def _rm_whitespace(s_: str) -> str:
-            return ' '.join(s_.split())
+
         if rm_whitespace:
-            self.f.append(_rm_whitespace)
+            self.f.append(lambda x: ' '.join(x.split()))
+        if lower:
+            self.f.append(lambda x: x.lower())
 
         def _func(s_) -> Callable:
             for func in self.f:
                 s_ = func(s_)
             return s_
+
         return _func
 
-    def execute(self, string: str, rm_whitespace=True) -> str:
+    def execute(self, string: str, rm_whitespace=True, lower=True) -> str:
         """
         Returns a final string. Use this method to get an answer.
 
+        :param lower: If the resulting string should be lowercase.
         :param string: The string to process.
         :param rm_whitespace: if the extra whitespace should be removed.
         :return: The processed string.
         """
 
-        def _rm_whitespace(s_: str) -> str:
-            return ' '.join(s_.split())
         if rm_whitespace:
-            self.f.append(_rm_whitespace)
+            self.f.append(lambda x: ' '.join(x.split()))
+        if lower:
+            self.f.append(lambda x: x.lower())
 
         for func in self.f:
             string = func(string)
@@ -360,13 +408,22 @@ def replace() -> ReplaceJob:
 
     Example:
 
-    dobbi.replace('Why #damn @alex33 is so harmful?')\
+    dobbi.replace()\
         .hashtag('TOKEN_HASHTAG')\
-        .mickname('USER')\
-        .finish()
+        .nickname('USER')\
+        .execute('Why #damn @alex33 is so harmful?')
 
     Result:
 
     'Why TOKEN_HASHTAG  USER is so harmful?'
     """
     return ReplaceJob()
+
+
+def get_sock() -> None:
+    """
+    To free Dobby.
+
+    :return: ???
+    """
+    print('Dobby has got a sock. Master threw it, and Dobby caught it, and Dobby – Dobby is free.')
