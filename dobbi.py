@@ -39,7 +39,7 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from typing import Callable, List
+from typing import Callable, List, Tuple, Dict
 from collections import Counter
 
 
@@ -441,17 +441,35 @@ class CollectionJob(Job):
 
         return _func
 
-    def execute(self, string: str) -> List[Counter]:
+    def execute(self, string: str) -> Dict[str, Dict]:
         """
         Returns a list of strings counted. Use this method to get an answer.
 
         :param string: The string to process.
-        :return: The processed string.
+        :return: The counted patterns.
         """
 
-        result = list()
+        result = dict()
         for func in self.f:
-            result.append(func(string))
+            tag, counter = func(string)
+            result[tag] = dict(counter)
+        return result
+
+    def batch_execute(self, strings: List[str]) -> Dict[str, Dict]:
+        """
+        Returns a list of strings counted. Use this method to get an answer.
+
+        :param strings: The strings to process.
+        :return: The counted patterns.
+        """
+
+        result = dict()
+        for string in strings:
+            for func in self.f:
+                tag, counter = func(string)
+                if tag not in result:
+                    result[tag] = dict()
+                result[tag] = result[tag] | dict(counter)
         return result
 
     def regexp(self, regular_expression: str) -> CollectionJob:
@@ -462,8 +480,8 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _regexp(s_: str) -> Counter:
-            return Counter(re.findall(regular_expression, s_))
+        def _regexp(s_: str) -> Tuple[str, Counter]:
+            return 'regexp', Counter(re.findall(regular_expression, s_))
 
         self.f.append(_regexp)
         return self
@@ -475,8 +493,8 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _url(s_: str) -> Counter:
-            return Counter(re.findall(r'https?://\S+', s_))
+        def _url(s_: str) -> Tuple[str, Counter]:
+            return 'url', Counter(re.findall(r'https?://\S+', s_))
 
         self.f.append(_url)
         return self
@@ -488,8 +506,8 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _nickname(s_: str) -> Counter:
-            return Counter(re.findall(r'@\w+', s_))
+        def _nickname(s_: str) -> Tuple[str, Counter]:
+            return 'nickname', Counter(re.findall(r'@\w+', s_))
 
         self.f.append(_nickname)
         return self
@@ -501,8 +519,8 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _hashtag(s_: str) -> Counter:
-            return Counter(re.findall(r'#\w+', s_))
+        def _hashtag(s_: str) -> Tuple[str, Counter]:
+            return 'hashtag', Counter(re.findall(r'#\w+', s_))
 
         self.f.append(_hashtag)
         return self
@@ -515,8 +533,8 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _punctuation(s_: str) -> Counter:
-            return Counter(re.findall(r'[^\w\s]', s_))
+        def _punctuation(s_: str) -> Tuple[str, Counter]:
+            return 'punctuation', Counter(re.findall(r'[^\w\s]', s_))
 
         self.f.append(_punctuation)
         return self
@@ -529,12 +547,12 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _whitespace(s_: str) -> Counter:
+        def _whitespace(s_: str) -> Tuple[str, Counter]:
             c = Counter()
             for ch in ['\t', '\n', '\r', '\v', '\f']:
                 if ch in s_:
-                    c[ch] = re.findall(ch, s_)
-            return c
+                    c[ch] = len(re.findall(ch, s_))
+            return 'whitespace', c
 
         self.f.append(_whitespace)
         return self
@@ -546,8 +564,8 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _html(s_: str) -> Counter:
-            return Counter(re.findall(r'<.*?>', s_))
+        def _html(s_: str) -> Tuple[str, Counter]:
+            return 'html', Counter(re.findall(r'<.*?>', s_))
 
         self.f.append(_html)
         return self
