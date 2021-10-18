@@ -9,7 +9,7 @@ setup(
     name='dobbi',
     packages=['emo'],
     py_modules=['dobbi'],
-    version='0.06',
+    version='0.07',
     license='Apache License 2.0',
     description='An open-source NLP library: fast text cleaning and preprocessing.',
     long_description=long_description,
@@ -17,7 +17,7 @@ setup(
     author='Iaroslav Amerkhanov',
     author_email='amerkhanov.y@gmail.com',
     url='https://github.com/iaramer/dobbi',
-    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_06.tar.gz',
+    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_07.tar.gz',
     keywords=['nlp', 'text', 'string', 'regexp', 'preprocess', 'clean'],
     classifiers=[
         'Development Status :: 3 - Alpha',
