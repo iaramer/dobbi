@@ -53,10 +53,11 @@ Intermediate methods (pattern processing choice):
 
 * `regexp()` - custom regular expressions
 * `url()` - URLs
-* `html()` - HTML and <*> type markups
+* `html()` - HTML and "<...>" type markups
 * `punctuation()` - punctuation
 * `hashtag()` - hashtags
-* `emo()` - emoji & emoticons
+* `emoji()` - [emoji](https://en.wikipedia.org/wiki/Emoji)
+* `emoticons()` - [emoticons](https://en.wikipedia.org/wiki/List_of_emoticons)
 * `whitespace()` - whitespaces
 * `nickname()` - @-starting nicknames
 
