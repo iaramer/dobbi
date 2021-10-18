@@ -249,7 +249,7 @@ class CleanJob(Job):
         """
 
         def _emoji(s_: str) -> str:
-            for e in reversed(EMOJI):
+            for e in reversed(list(EMOJI.keys())):
                 s_ = s_.replace(e, ' ')
             return s_
 
@@ -264,7 +264,7 @@ class CleanJob(Job):
         """
 
         def _emoticon(s_: str) -> str:
-            for e in reversed(EMOTICONS):
+            for e in reversed(list(EMOTICONS.keys())):
                 s_ = re.sub(e, ' ', s_)
             return s_
 
@@ -449,7 +449,7 @@ class ReplaceJob(Job):
         """
 
         def _emoji(s_: str) -> str:
-            for e in reversed(EMOJI):
+            for e in reversed(list(EMOJI.keys())):
                 s_ = s_.replace(e, ' ' + EMOJI[e] + ' ')
             return s_
 
@@ -464,7 +464,7 @@ class ReplaceJob(Job):
         """
 
         def _emoticon(s_: str) -> str:
-            for e in reversed(EMOTICONS):
+            for e in reversed(list(EMOTICONS.keys())):
                 s_ = s_.replace(e, ' ' + EMOTICONS[e] + ' ')
             return s_
 
@@ -672,7 +672,7 @@ class CollectionJob(Job):
             if ignore_url:
                 s_ = re.sub(r'https?://\S+', ' ', s_)
             if ignore_emoji:
-                for e in reversed(EMOJI):
+                for e in reversed(list(EMOJI.keys())):
                     s_ = s_.replace(e, ' ')
             c = Counter()
             for e in EMOTICONS:
