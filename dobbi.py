@@ -95,7 +95,7 @@ class Job(ABC):
         pass
 
     @abstractmethod
-    def emoticons(self) -> Callable:
+    def emoticon(self) -> Callable:
         pass
 
 
@@ -256,19 +256,19 @@ class CleanJob(Job):
         self.f.append(_emoji)
         return self
 
-    def emoticons(self) -> CleanJob:
+    def emoticon(self) -> CleanJob:
         """
         Removes emoticons.
 
         :return: The instance of Work to be chained.
         """
 
-        def _emoticons(s_: str) -> str:
+        def _emoticon(s_: str) -> str:
             for e in reversed(EMOTICONS):
                 s_ = re.sub(e, '', s_)
             return s_
 
-        self.f.append(_emoticons)
+        self.f.append(_emoticon)
         return self
 
 
@@ -456,19 +456,19 @@ class ReplaceJob(Job):
         self.f.append(_emoji)
         return self
 
-    def emoticons(self) -> ReplaceJob:
+    def emoticon(self) -> ReplaceJob:
         """
         Finds emoticons.
 
         :return: The instance of Work to be chained.
         """
 
-        def _emoticons(s_: str) -> str:
+        def _emoticon(s_: str) -> str:
             for e in reversed(EMOTICONS):
                 s_ = s_.replace(e, ' ' + EMOTICONS[e] + ' ')
             return s_
 
-        self.f.append(_emoticons)
+        self.f.append(_emoticon)
         return self
 
 
@@ -659,7 +659,7 @@ class CollectionJob(Job):
         self.f.append(_emoji)
         return self
 
-    def emoticons(self, ignore_url=True) -> CollectionJob:
+    def emoticon(self, ignore_url=True) -> CollectionJob:
         """
         Finds emoticons.
 
@@ -667,7 +667,7 @@ class CollectionJob(Job):
         :return: The instance of Work to be chained.
         """
 
-        def _emoticons(s_: str) -> Tuple[str, Counter]:
+        def _emoticon(s_: str) -> Tuple[str, Counter]:
             if ignore_url:
                 s_ = re.sub(r'https?://\S+', ' ', s_)
             c = Counter()
@@ -675,9 +675,9 @@ class CollectionJob(Job):
                 emoticons_number = len(re.findall(e, s_))
                 if emoticons_number > 0:
                     c[EMOTICONS[e]] = emoticons_number
-            return 'emoticons', c
+            return 'emoticon', c
 
-        self.f.append(_emoticons)
+        self.f.append(_emoticon)
         return self
 
 
