@@ -1,15 +1,21 @@
 from distutils.core import setup
+from pathlib import Path
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='dobbi',
     py_modules=['dobbi'],
-    version='0.03',
+    version='0.04',
     license='Apache License 2.0',
-    description='An open-source NLP library: fast text cleaning and preprocessing',
+    description='An open-source NLP library: fast text cleaning and preprocessing.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Iaroslav Amerkhanov',
     author_email='amerkhanov.y@gmail.com',
     url='https://github.com/iaramer/dobbi',
-    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_03.tar.gz',
+    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_04.tar.gz',
     keywords=['nlp', 'text', 'string', 'regexp', 'preprocess', 'clean'],
     classifiers=[
         'Development Status :: 3 - Alpha',

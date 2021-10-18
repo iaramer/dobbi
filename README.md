@@ -11,7 +11,7 @@ You can simply remove hashtags, nicknames, emoji, url addresses, punctuation, wh
 
 ###  Getting it
 
-To download dobbi, either fork this github repo or simply use Pypi via pip.
+To download dobbi, either fork this github repo or simply use [Pypi](https://pypi.org/project/dobbi/) via pip.
 
 ```sh
 $ pip install dobbi
