@@ -250,7 +250,7 @@ class CleanJob(Job):
 
         def _emoji(s_: str) -> str:
             for e in reversed(EMOJI):
-                s_ = s_.replace(e, '')
+                s_ = s_.replace(e, ' ')
             return s_
 
         self.f.append(_emoji)
@@ -258,14 +258,14 @@ class CleanJob(Job):
 
     def emoticon(self) -> CleanJob:
         """
-        Removes emoticons.
+        Removes emoticons. Better to use after emoji().
 
         :return: The instance of Work to be chained.
         """
 
         def _emoticon(s_: str) -> str:
             for e in reversed(EMOTICONS):
-                s_ = re.sub(e, '', s_)
+                s_ = re.sub(e, ' ', s_)
             return s_
 
         self.f.append(_emoticon)
@@ -458,7 +458,7 @@ class ReplaceJob(Job):
 
     def emoticon(self) -> ReplaceJob:
         """
-        Finds emoticons.
+        Finds emoticons. Better to use after emoji().
 
         :return: The instance of Work to be chained.
         """
@@ -659,17 +659,21 @@ class CollectionJob(Job):
         self.f.append(_emoji)
         return self
 
-    def emoticon(self, ignore_url=True) -> CollectionJob:
+    def emoticon(self, ignore_emoji=True, ignore_url=True) -> CollectionJob:
         """
         Finds emoticons.
 
-        :param ignore_url: Whether to ignore the http/https type patterns
+        :param ignore_emoji: Whether to ignore the emoji patterns (recommended).
+        :param ignore_url: Whether to ignore the http/https type patterns.
         :return: The instance of Work to be chained.
         """
 
         def _emoticon(s_: str) -> Tuple[str, Counter]:
             if ignore_url:
                 s_ = re.sub(r'https?://\S+', ' ', s_)
+            if ignore_emoji:
+                for e in reversed(EMOJI):
+                    s_ = s_.replace(e, ' ')
             c = Counter()
             for e in EMOTICONS:
                 emoticons_number = len(re.findall(e, s_))
