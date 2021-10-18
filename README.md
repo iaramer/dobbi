@@ -37,17 +37,33 @@ dobbi.clean()\
     .execute('Check here: https://some-url.com')
 ```
 
-## Supported patterns
+## Supported methods and patterns
 
-The library supports the following patterns:
-* URL
-* Punctuation
-* Emoji & emoticons
-* Hashtags
-* Whitespaces
-* Nicknames
-* HTML
-* Custom regexp
+The process consists of three stages:
+1. Initialization methods: initialize a dobbi Work object
+2. Intermediate methods: chain needed patterns in the needed order
+3. Terminal methods:
+
+Initialization functions:
+* `dobbi.clean()`
+* `dobbi.collect()`
+* `dobbi.replace()`
+
+Intermediate methods (pattern processing choice):
+
+* `regexp()` - custom regular expressions
+* `url()` - URLs
+* `html()` - HTML and <*> type markups
+* `punctuation()` - punctuation
+* `hashtag()` - hashtags
+* `emo()` - emoji & emoticons
+* `whitespace()` - whitespaces
+* `nickname()` - @-starting nicknames
+
+Terminal methods:
+
+* `execute(str)` - executes chosen methods on the provided string.
+* `function()` - returns a function which is a combination of the chosen methods.
 
 ## Examples
 
@@ -85,6 +101,18 @@ func('\t #fun #lol    Why  @Alex33 is so... funny? <tag> \nCheck\there: https://
 Result: 'Why Alex33 is so funny Check here'
 
 *(!) Please, try to avoid the in-line method chaining, as it is significantly less readable.* 
+
+4) Chain regexp methods
+
+```Python
+dobbi.clean()\
+    .regexp('#\w+')\
+    .regexp('@\w+')\
+    .regexp('https?://\S+')\
+    .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
+```
+
+Result: 'Why is so funny? Check here:'
 
 ## Additional
 

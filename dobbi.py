@@ -39,7 +39,8 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Callable, List
+from collections import Counter
 
 
 class Job(ABC):
@@ -134,7 +135,7 @@ class CleanJob(Job):
 
     def regexp(self, regular_expression: str) -> CleanJob:
         """
-        Provide a custom regexp to remove all of its usages in the initial string.
+        Provides a custom regexp to remove all of its usages in the initial string.
 
         :param regular_expression: The regex to apply.
         :return: The instance of Work to be chained.
@@ -232,9 +233,9 @@ class CleanJob(Job):
 
 def clean() -> CleanJob:
     """
-    Initializes a work to clean the provided string by chaining.
+    Initialization function. Initializes a work to clean the provided string by chaining.
 
-    :return: Instance of Work object.
+    :return: Instance of the Work object.
 
     Example:
 
@@ -297,7 +298,7 @@ class ReplaceJob(Job):
 
     def regexp(self, regular_expression: str, replacement='TOKEN_CUSTOM') -> ReplaceJob:
         """
-        Provide a custom regexp to replace all of its occurrences in the initial string.
+        Provides a custom regexp to replace all of its occurrences in the initial string.
 
         :param replacement: Token to replace.
         :param regular_expression: The regex to apply.
@@ -402,9 +403,9 @@ class ReplaceJob(Job):
 
 def replace() -> ReplaceJob:
     """
-    Initializes a work to change the provided string with some token.
+    Initialization function. Initializes a work to change the provided string with some token.
 
-    :return: Instance of Work object.
+    :return: Instance of the Work object.
 
     Example:
 
@@ -418,6 +419,158 @@ def replace() -> ReplaceJob:
     'Why TOKEN_HASHTAG  USER is so harmful?'
     """
     return ReplaceJob()
+
+
+class CollectionJob(Job):
+    """
+    An internal class for performing words collection.
+    """
+
+    def function(self) -> Callable:
+        """
+        Creates a function, which is a combination of previously selected chained functions.
+
+        :return: A function that is the combination of previously chosen chained functions.
+        """
+
+        def _func(s_) -> List[Counter]:
+            result = list()
+            for func in self.f:
+                result.append(func(s_))
+            return result
+
+        return _func
+
+    def execute(self, string: str) -> List[Counter]:
+        """
+        Returns a list of strings counted. Use this method to get an answer.
+
+        :param string: The string to process.
+        :return: The processed string.
+        """
+
+        result = list()
+        for func in self.f:
+            result.append(func(string))
+        return result
+
+    def regexp(self, regular_expression: str) -> CollectionJob:
+        """
+        Provides a custom regexp to collect all of its occurrences in the initial string.
+
+        :param regular_expression: The regex to apply.
+        :return: The instance of Work to be chained.
+        """
+
+        def _regexp(s_: str) -> Counter:
+            return Counter(re.findall(regular_expression, s_))
+
+        self.f.append(_regexp)
+        return self
+
+    def url(self) -> CollectionJob:
+        """
+        Finds http://... and https://... URLs.
+
+        :return: The instance of Work to be chained.
+        """
+
+        def _url(s_: str) -> Counter:
+            return Counter(re.findall(r'https?://\S+', s_))
+
+        self.f.append(_url)
+        return self
+
+    def nickname(self) -> CollectionJob:
+        """
+        Finds @nickname type of words.
+
+        :return: The instance of Work to be chained.
+        """
+
+        def _nickname(s_: str) -> Counter:
+            return Counter(re.findall(r'@\w+', s_))
+
+        self.f.append(_nickname)
+        return self
+
+    def hashtag(self) -> CollectionJob:
+        """
+        Finds @hashtag type of words.
+
+        :return: The instance of Work to be chained.
+        """
+
+        def _hashtag(s_: str) -> Counter:
+            return Counter(re.findall(r'#\w+', s_))
+
+        self.f.append(_hashtag)
+        return self
+
+    def punctuation(self) -> CollectionJob:
+        """
+        Finds all the characters from the following list:
+        !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+
+        :return: The instance of Work to be chained.
+        """
+
+        def _punctuation(s_: str) -> Counter:
+            return Counter(re.findall(r'[^\w\s]', s_))
+
+        self.f.append(_punctuation)
+        return self
+
+    def whitespace(self) -> CollectionJob:
+        """
+        Replaces with provided 'replacement' parameter all the whitespace symbols from the following list:
+        \t\n\r\v\f
+
+        :return: The instance of Work to be chained.
+        """
+
+        def _whitespace(s_: str) -> Counter:
+            c = Counter()
+            for ch in ['\t', '\n', '\r', '\v', '\f']:
+                if ch in s_:
+                    c[ch] = re.findall(ch, s_)
+            return c
+
+        self.f.append(_whitespace)
+        return self
+
+    def html(self) -> CollectionJob:
+        """
+        Removes <html> type of words.
+
+        :return: The instance of Work to be chained.
+        """
+
+        def _html(s_: str) -> Counter:
+            return Counter(re.findall(r'<.*?>', s_))
+
+        self.f.append(_html)
+        return self
+
+
+def collect() -> CollectionJob:
+    """
+    Initialization function. Initializes a work to collect the words by some pattern.
+
+    :return: Instance of the Work object.
+
+    Example:
+
+    dobbi.collect()\
+        .hashtag()\
+        .nickname()\
+        .execute('Why #damn @alex33 is so harmful?')
+
+    Result:
+
+    'Why TOKEN_HASHTAG  USER is so harmful?'
+    """
+    return CollectionJob()
 
 
 def get_sock() -> None:
