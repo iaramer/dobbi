@@ -394,7 +394,7 @@ class ReplaceJob(Job):
         self.f.append(_hashtag)
         return self
 
-    def punctuation(self, replacement=' TOKEN_PUNCTUATION ') -> ReplaceJob:
+    def punctuation(self, replacement=' ') -> ReplaceJob:
         """
         Replaces all the characters from the following list:
         !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
