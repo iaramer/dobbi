@@ -175,8 +175,8 @@ EMOTICONS = {
     u"\(..\)": "Looking down",
     u"\(._.\)": "Looking down",
     u"\^m\^": "Giggling with hand covering mouth",
-    u"\(・・?": "Confusion",
-    u"\(?_?\)": "Confusion",  #
+    u"\(・・\?": "Confusion",
+    u"\(\?_\?\)": "Confusion",
     u">\^_\^<": "Normal Laugh",
     u"<\^!\^>": "Normal Laugh",
     u"\^/\^": "Normal Laugh",
