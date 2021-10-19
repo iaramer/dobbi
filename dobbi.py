@@ -450,7 +450,8 @@ class ReplaceJob(Job):
 
         def _emoji(s_: str) -> str:
             for e in reversed(list(EMOJI.keys())):
-                s_ = s_.replace(e, ' ' + EMOJI[e] + ' ')
+                token = ' ' + EMOJI[e] + ' '
+                s_ = s_.replace(e, token)
             return s_
 
         self.f.append(_emoji)
@@ -465,7 +466,8 @@ class ReplaceJob(Job):
 
         def _emoticon(s_: str) -> str:
             for e in reversed(list(EMOTICONS.keys())):
-                s_ = s_.replace(e, ' ' + EMOTICONS[e] + ' ')
+                token = ' ' + EMOTICONS[e] + ' '
+                s_ = re.sub(e, token, s_)
             return s_
 
         self.f.append(_emoticon)
