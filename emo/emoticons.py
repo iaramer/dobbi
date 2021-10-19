@@ -26,6 +26,8 @@ EMOTICONS = {
     u"=3": "Laughing or big grin or laugh with glasses",
     u"B\^D": "Laughing or big grin or laugh with glasses",
     u":-\)\)": "Very happy",
+    u":\)\)": "Very happy",
+    u"=\)\)": "Very happy",
     u":‑\(": "Frown or sad or angry or pouting",
     u"=\(": "Frown or sad or angry or pouting",
     u":\(": "Frown or sad or angry or pouting",
