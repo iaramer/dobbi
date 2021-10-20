@@ -120,7 +120,7 @@ class CleanJob(Job):
 
         def _func(s_) -> Callable:
             for func in self.f:
-                s_ = func(s_)
+                s_ = func(str(s_))
             return s_
 
         return _func
@@ -141,7 +141,7 @@ class CleanJob(Job):
             self.f.append(lambda x: x.lower())
 
         for func in self.f:
-            string = func(string)
+            string = func(str(string))
         return string
 
     def regexp(self, regular_expression: str) -> CleanJob:
