@@ -68,7 +68,7 @@ Terminal methods:
 
 ## Examples
 
-1) Clean a twitter message
+### 1) Clean a random Twitter message
 
 ```Python
 dobbi.clean()\
@@ -78,9 +78,13 @@ dobbi.clean()\
     .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
 ```
 
-Result: 'Why is so funny? Check here:'
+Result
 
-2) Replace nickname and url with tokens
+```Python
+'Why is so funny? Check here:'
+```
+
+### 2) Replace nickname and url with tokens
 
 ```Python
 dobbi.replace()\
@@ -90,18 +94,26 @@ dobbi.replace()\
     .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
 ```
 
-Result: 'Why TOKEN_NICKNAME is so funny? Check here: CUSTOM_URL_TOKEN'
+Result
 
-3) Get text cleanup function
+```Python
+'Why TOKEN_NICKNAME is so funny? Check here: CUSTOM_URL_TOKEN'
+```
+
+### 3) Get text cleanup function (one-liner)
+
+*(!) Please, try to avoid the in-line method chaining, as it is significantly less readable.*
 
 ```Python
 func = dobbi.clean().url().hashtag().punctuation().whitespace().html().function()
 func('\t #fun #lol    Why  @Alex33 is so... funny? <tag> \nCheck\there: https://some-url.com')
 ```
 
-Result: 'Why Alex33 is so funny Check here'
+Result
 
-*(!) Please, try to avoid the in-line method chaining, as it is significantly less readable.* 
+```Python
+'Why Alex33 is so funny Check here'
+```
 
 4) Chain regexp methods
 
@@ -113,7 +125,11 @@ dobbi.clean()\
     .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
 ```
 
-Result: 'Why is so funny? Check here:'
+Result
+
+```Python
+'Why is so funny? Check here:'
+```
 
 ## Additional
 
