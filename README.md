@@ -1,10 +1,16 @@
-# 🌴 dobbi 🦕
+<h1 align='center'>
+ <big><big>🌴 dobbi 🦕</big></big>
+</h1>
+<p align='center'>
+Takes care of all of this boring NLP stuff
+ <br>
+ <br>
+ <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/dobbi">
+ <a href='https://pypi.org/project/dobbi/'><img alt="Version" src="https://img.shields.io/pypi/v/dobbi?logo=pypi"></a>
+ <a href='https://opensource.org/licenses/Apache-2.0'><img alt="GitHub" src="https://img.shields.io/github/license/iaramer/dobbi"></a><br> 
+</p>
 
-*Takes care of all of this boring NLP stuff*
-
----
-
-## Description
+# Description
 
 An open-source NLP library: fast text cleaning and preprocessing.
 
