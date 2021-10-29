@@ -7,7 +7,7 @@ def test_batch_execute_emoticons():
         .emoticon() \
         .batch_execute([string, string])
     actual = {'emoticon': {'TOKEN_EMOTICON_HAPPY_FACE_OR_SMILEY': 4,
-              'TOKEN_EMOTICON_LAUGHING_OR_BIG_GRIN_OR_LAUGH_WITH_GLASSES': 2}}
+                           'TOKEN_EMOTICON_LAUGHING_OR_BIG_GRIN_OR_LAUGH_WITH_GLASSES': 2}}
     assert dobbi_result == actual
 
 
