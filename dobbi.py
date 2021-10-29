@@ -542,7 +542,10 @@ class CollectionJob(Job):
                 tag, counter = func(string)
                 if tag not in result:
                     result[tag] = dict()
-                result[tag] = result[tag] | dict(counter)
+                for k, v in counter.items():
+                    if k not in result[tag]:
+                        result[tag][k] = 0
+                    result[tag][k] += v
         return result
 
     def regexp(self, regular_expression: str) -> CollectionJob:
