@@ -110,7 +110,7 @@ Result:
 'Why TOKEN_NICKNAME is so funny? Check here: __CUSTOM_URL_TOKEN__'
 ```
 
-### 3) Get text cleanup function (one-liner)
+### 3) Get the text cleanup function (one-liner)
 
 ~~Please, try to avoid the in-line method chaining, as it is less readable.~~ Do as your heart tells you.
 
