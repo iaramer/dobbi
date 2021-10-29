@@ -8,7 +8,7 @@ long_description = (this_directory / "README.md").read_text()
 setup(
     name='dobbi',
     packages=['dobbi', 'dobbi.collections'],
-    version='0.11',
+    version='0.12',
     license='Apache License 2.0',
     description='An open-source NLP library: fast text cleaning and preprocessing.',
     long_description=long_description,
@@ -16,7 +16,7 @@ setup(
     author='Iaroslav Amerkhanov',
     author_email='amerkhanov.y@gmail.com',
     url='https://github.com/iaramer/dobbi',
-    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_11.tar.gz',
+    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_12.tar.gz',
     keywords=['nlp', 'text', 'string', 'regexp', 'preprocess', 'clean'],
     classifiers=[
         'Development Status :: 3 - Alpha',
