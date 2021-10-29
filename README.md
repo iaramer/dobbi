@@ -150,7 +150,7 @@ So, you're better to chain `.punctuation()` as one of the last functions.
 
 If you enjoyed the project I would be grateful if you supported it :)
 
-Below is the list of ~~different stuff~~ useful features I would be happy to share with you:
+Below is the list of useful features I would be happy to share with you:
 
 - [ ] Finding bugs
 - [ ] Making code optimizations
