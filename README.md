@@ -1,5 +1,5 @@
 <h1 align='center'>
- <big><big>🌴 dobbi 🦕</big></big>
+ 🌴 dobbi 🦕
 </h1>
 <p align='center'>
 Takes care of all of this boring NLP stuff
