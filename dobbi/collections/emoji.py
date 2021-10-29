@@ -253,6 +253,7 @@ EMOJI = {
     u":SOON_arrow:": u"\U0001F51C",
     u":SOS_button:": u"\U0001F198",
     u":Sagittarius:": u"\U00002650",
+    u":Sauropod:": u"\U0001F995",
     u":Samoa:": u"\U0001F1FC \U0001F1F8",
     u":San_Marino:": u"\U0001F1F8 \U0001F1F2",
     u":Santa_Claus:": u"\U0001F385",
