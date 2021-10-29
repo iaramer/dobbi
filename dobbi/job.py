@@ -1,49 +1,10 @@
-"""
-This library provides a quick and ready-to-use text preprocessing tools for text cleaning and normalization.
-You can simply remove hashtags, nicknames, emoji, url addresses, punctuation, whitespace and etc.
-
-Examples:
-
-1) Clean a twitter message
-
-dobbi.clean()\
-    .hashtag()\
-    .nickname()\
-    .url()\
-    .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
-
-Result: 'Why is so funny? Check here:'
-
-2) Replace nickname and url with tokens
-
-dobbi.replace()\
-    .hashtag('')\
-    .nickname()\
-    .url('CUSTOM_URL_TOKEN')\
-    .execute('#fun #lol    Why  @Alex33 is so funny? Check here: https://some-url.com')
-
-Result: 'Why TOKEN_NICKNAME is so funny? Check here: CUSTOM_URL_TOKEN'
-
-3) Get text cleanup function
-
-func = dobbi.clean().url().hashtag().punctuation().whitespace().html().function()  # One-liner is less readable.
-func('\t #fun #lol    Why  @Alex33 is so... funny? <tag> \nCheck\there: https://some-url.com')
-
-Result: 'Why Alex33 is so funny Check here'
-
-Please pay attention that the functions are applied in the order you specify.
-So, chain .punctuation() as one of the last functions.
-"""
-
-from __future__ import annotations
-
 import re
 from abc import ABC, abstractmethod
 from collections import Counter
-from typing import Callable, List, Tuple, Dict
+from typing import Callable, List, Dict, Tuple, Any
 
-from emo.emoji import EMOJI
-from emo.emoticons import EMOTICONS
+from dobbi.collections.emoji import EMOJI
+from dobbi.collections.emoticons import EMOTICONS
 
 
 class Job(ABC):
@@ -144,12 +105,12 @@ class CleanJob(Job):
             string = func(str(string))
         return string
 
-    def regexp(self, regular_expression: str) -> CleanJob:
+    def regexp(self, regular_expression: str) -> Job:
         """
         Provides a custom regexp to remove all of its usages in the initial string.
 
         :param regular_expression: The regex to apply.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _regexp(s_: str) -> str:
@@ -158,11 +119,11 @@ class CleanJob(Job):
         self.f.append(_regexp)
         return self
 
-    def url(self) -> CleanJob:
+    def url(self) -> Job:
         """
         Removes http://... and https://... URLs.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _url(s_: str) -> str:
@@ -171,11 +132,11 @@ class CleanJob(Job):
         self.f.append(_url)
         return self
 
-    def nickname(self) -> CleanJob:
+    def nickname(self) -> Job:
         """
         Removes @nickname type of words.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _nickname(s_: str) -> str:
@@ -184,11 +145,11 @@ class CleanJob(Job):
         self.f.append(_nickname)
         return self
 
-    def hashtag(self) -> CleanJob:
+    def hashtag(self) -> Job:
         """
         Removes @hashtag type of words.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _hashtag(s_: str) -> str:
@@ -197,12 +158,12 @@ class CleanJob(Job):
         self.f.append(_hashtag)
         return self
 
-    def punctuation(self) -> CleanJob:
+    def punctuation(self) -> Job:
         """
         Removes all the characters from the following list:
         !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _punctuation(s_: str) -> str:
@@ -211,12 +172,12 @@ class CleanJob(Job):
         self.f.append(_punctuation)
         return self
 
-    def whitespace(self) -> CleanJob:
+    def whitespace(self) -> Job:
         """
         Replaces with ' ' (simple whitespace) all the whitespace symbols from the following list:
         \t\n\r\v\f
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _whitespace(s_: str) -> str:
@@ -228,11 +189,11 @@ class CleanJob(Job):
         self.f.append(_whitespace)
         return self
 
-    def html(self) -> CleanJob:
+    def html(self) -> Job:
         """
         Removes <html> type of words.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _html(s_: str) -> str:
@@ -241,11 +202,11 @@ class CleanJob(Job):
         self.f.append(_html)
         return self
 
-    def emoji(self) -> CleanJob:
+    def emoji(self) -> Job:
         """
         Removes all of the emojis.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _emoji(s_: str) -> str:
@@ -256,11 +217,11 @@ class CleanJob(Job):
         self.f.append(_emoji)
         return self
 
-    def emoticon(self) -> CleanJob:
+    def emoticon(self) -> Job:
         """
         Removes emoticons. Better to use after emoji().
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _emoticon(s_: str) -> str:
@@ -270,26 +231,6 @@ class CleanJob(Job):
 
         self.f.append(_emoticon)
         return self
-
-
-def clean() -> CleanJob:
-    """
-    Initialization function. Initializes a work to clean the provided string by chaining.
-
-    :return: Instance of the Work object.
-
-    Example:
-
-    dobbi.clean()\
-        .hashtag()\
-        .nickname()\
-        .execute('Why #damn @alex33 is so harmful?')
-
-    Result:
-
-    'Why is so harmful?'
-    """
-    return CleanJob()
 
 
 class ReplaceJob(Job):
@@ -337,13 +278,13 @@ class ReplaceJob(Job):
             string = func(string)
         return string
 
-    def regexp(self, regular_expression: str, replacement='TOKEN_CUSTOM') -> ReplaceJob:
+    def regexp(self, regular_expression: str, replacement='TOKEN_CUSTOM') -> Job:
         """
         Provides a custom regexp to replace all of its occurrences in the initial string.
 
         :param replacement: Token to replace.
         :param regular_expression: The regex to apply.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _regexp(s_: str) -> str:
@@ -352,12 +293,12 @@ class ReplaceJob(Job):
         self.f.append(_regexp)
         return self
 
-    def url(self, replacement='TOKEN_URL') -> ReplaceJob:
+    def url(self, replacement='TOKEN_URL') -> Job:
         """
         Replaces http://... and https://... URLs.
 
         :param replacement: Token to replace.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _url(s_: str) -> str:
@@ -366,12 +307,12 @@ class ReplaceJob(Job):
         self.f.append(_url)
         return self
 
-    def nickname(self, replacement='TOKEN_NICKNAME') -> ReplaceJob:
+    def nickname(self, replacement='TOKEN_NICKNAME') -> Job:
         """
         Removes @nickname type of words.
 
         :param replacement: Token to replace.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _nickname(s_: str) -> str:
@@ -380,12 +321,12 @@ class ReplaceJob(Job):
         self.f.append(_nickname)
         return self
 
-    def hashtag(self, replacement='TOKEN_HASHTAG') -> ReplaceJob:
+    def hashtag(self, replacement='TOKEN_HASHTAG') -> Job:
         """
         Removes @hashtag type of words.
 
         :param replacement: Token to replace.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _hashtag(s_: str) -> str:
@@ -394,13 +335,13 @@ class ReplaceJob(Job):
         self.f.append(_hashtag)
         return self
 
-    def punctuation(self, replacement=' ') -> ReplaceJob:
+    def punctuation(self, replacement=' ') -> Job:
         """
         Replaces all the characters from the following list:
         !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
 
         :param replacement: Token to replace.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _punctuation(s_: str) -> str:
@@ -409,13 +350,13 @@ class ReplaceJob(Job):
         self.f.append(_punctuation)
         return self
 
-    def whitespace(self, replacement=' ') -> ReplaceJob:
+    def whitespace(self, replacement=' ') -> Job:
         """
         Replaces with provided 'replacement' parameter all the whitespace symbols from the following list:
         \t\n\r\v\f
 
         :param replacement: Token to replace.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _whitespace(s_: str) -> str:
@@ -427,12 +368,12 @@ class ReplaceJob(Job):
         self.f.append(_whitespace)
         return self
 
-    def html(self, replacement='TOKEN_HTML') -> ReplaceJob:
+    def html(self, replacement='TOKEN_HTML') -> Job:
         """
         Removes <html> type of words.
 
         :param replacement: Token to replace.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _html(s_: str) -> str:
@@ -441,11 +382,11 @@ class ReplaceJob(Job):
         self.f.append(_html)
         return self
 
-    def emoji(self) -> ReplaceJob:
+    def emoji(self) -> Job:
         """
         Replaces emojis with their description tokens.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _emoji(s_: str) -> str:
@@ -457,11 +398,11 @@ class ReplaceJob(Job):
         self.f.append(_emoji)
         return self
 
-    def emoticon(self) -> ReplaceJob:
+    def emoticon(self) -> Job:
         """
         Finds emoticons. Better to use after emoji().
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _emoticon(s_: str) -> str:
@@ -472,26 +413,6 @@ class ReplaceJob(Job):
 
         self.f.append(_emoticon)
         return self
-
-
-def replace() -> ReplaceJob:
-    """
-    Initialization function. Initializes a work to change the provided string with some token.
-
-    :return: Instance of the Work object.
-
-    Example:
-
-    dobbi.replace()\
-        .hashtag('TOKEN_HASHTAG')\
-        .nickname('USER')\
-        .execute('Why #damn @alex33 is so harmful?')
-
-    Result:
-
-    'Why TOKEN_HASHTAG  USER is so harmful?'
-    """
-    return ReplaceJob()
 
 
 class CollectionJob(Job):
@@ -548,12 +469,12 @@ class CollectionJob(Job):
                     result[tag][k] += v
         return result
 
-    def regexp(self, regular_expression: str) -> CollectionJob:
+    def regexp(self, regular_expression: str) -> Job:
         """
         Provides a custom regexp to collect all of its occurrences in the initial string.
 
         :param regular_expression: The regex to apply.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _regexp(s_: str) -> Tuple[str, Counter]:
@@ -562,11 +483,11 @@ class CollectionJob(Job):
         self.f.append(_regexp)
         return self
 
-    def url(self) -> CollectionJob:
+    def url(self) -> Job:
         """
         Finds http://... and https://... URLs.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _url(s_: str) -> Tuple[str, Counter]:
@@ -575,11 +496,11 @@ class CollectionJob(Job):
         self.f.append(_url)
         return self
 
-    def nickname(self) -> CollectionJob:
+    def nickname(self) -> Job:
         """
         Finds @nickname type of words.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _nickname(s_: str) -> Tuple[str, Counter]:
@@ -588,11 +509,11 @@ class CollectionJob(Job):
         self.f.append(_nickname)
         return self
 
-    def hashtag(self) -> CollectionJob:
+    def hashtag(self) -> Job:
         """
         Finds @hashtag type of words.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _hashtag(s_: str) -> Tuple[str, Counter]:
@@ -601,12 +522,12 @@ class CollectionJob(Job):
         self.f.append(_hashtag)
         return self
 
-    def punctuation(self) -> CollectionJob:
+    def punctuation(self) -> Job:
         """
         Finds all the characters from the following list:
         !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _punctuation(s_: str) -> Tuple[str, Counter]:
@@ -615,12 +536,12 @@ class CollectionJob(Job):
         self.f.append(_punctuation)
         return self
 
-    def whitespace(self) -> CollectionJob:
+    def whitespace(self) -> Job:
         """
         Finds all the whitespace symbols from the following list:
         \t\n\r\v\f
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _whitespace(s_: str) -> Tuple[str, Counter]:
@@ -633,11 +554,11 @@ class CollectionJob(Job):
         self.f.append(_whitespace)
         return self
 
-    def html(self) -> CollectionJob:
+    def html(self) -> Job:
         """
         Finds <html> type of words.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _html(s_: str) -> Tuple[str, Counter]:
@@ -646,11 +567,11 @@ class CollectionJob(Job):
         self.f.append(_html)
         return self
 
-    def emoji(self) -> CollectionJob:
+    def emoji(self) -> Job:
         """
         Finds emojis.
 
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _emoji(s_: str) -> Tuple[str, Counter]:
@@ -664,13 +585,13 @@ class CollectionJob(Job):
         self.f.append(_emoji)
         return self
 
-    def emoticon(self, ignore_emoji=True, ignore_url=True) -> CollectionJob:
+    def emoticon(self, ignore_emoji=True, ignore_url=True) -> Job:
         """
         Finds emoticons.
 
         :param ignore_emoji: Whether to ignore the emoji patterns (recommended).
         :param ignore_url: Whether to ignore the http/https type patterns.
-        :return: The instance of Work to be chained.
+        :return: The instance of Job to be chained.
         """
 
         def _emoticon(s_: str) -> Tuple[str, Counter]:
@@ -688,32 +609,3 @@ class CollectionJob(Job):
 
         self.f.append(_emoticon)
         return self
-
-
-def collect() -> CollectionJob:
-    """
-    Initialization function. Initializes a work to collect the words by some pattern.
-
-    :return: Instance of the Work object.
-
-    Example:
-
-    dobbi.collect()\
-        .hashtag()\
-        .nickname()\
-        .execute('Why #damn @alex33 is so harmful?')
-
-    Result:
-
-    'Why TOKEN_HASHTAG  USER is so harmful?'
-    """
-    return CollectionJob()
-
-
-def get_sock() -> None:
-    """
-    To free Dobby.
-
-    :return: ???
-    """
-    print('Dobby has got a sock. Master threw it, and Dobby caught it, and Dobby – Dobby is free!')

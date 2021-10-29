@@ -7,9 +7,8 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='dobbi',
-    packages=['emo'],
-    py_modules=['dobbi'],
-    version='0.10',
+    packages=['dobbi'],
+    version='0.11',
     license='Apache License 2.0',
     description='An open-source NLP library: fast text cleaning and preprocessing.',
     long_description=long_description,
@@ -17,7 +16,7 @@ setup(
     author='Iaroslav Amerkhanov',
     author_email='amerkhanov.y@gmail.com',
     url='https://github.com/iaramer/dobbi',
-    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_10.tar.gz',
+    download_url='https://github.com/iaramer/dobbi/archive/refs/tags/v0_11.tar.gz',
     keywords=['nlp', 'text', 'string', 'regexp', 'preprocess', 'clean'],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -28,6 +27,8 @@ setup(
         'License :: OSI Approved :: Apache Software License',
 
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
