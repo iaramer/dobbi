@@ -40,11 +40,32 @@ import dobbi
 The library uses method chaining in order to simplify text processing:
 
 ```Python
-dobbi.clean() \
+import pandas as pd
+
+d = {'text': ['#fun #lol   Why  @Alex33 is so funny here: https://some-url.com',
+              '#looool     =)      😍 such lovely!?*!!!%&']}
+df = pd.DataFrame(d)
+
+cln_func = dobbi.clean() \
     .hashtag() \
     .nickname() \
     .url() \
-    .execute('Check here: https://some-url.com')
+    .function()
+df['text'] = df['text'].map(cln_func)
+
+repl_func = dobbi.replace() \
+    .emoji() \
+    .emoticon() \
+    .punctuation() \
+    .function()
+df['text'] = df['text'].map(repl_func)
+```
+
+Result:
+
+```Python
+print(df['text'][0])  # 'Why is so funny here'
+print(df['text'][1])  # 'TOKEN_EMOTICON_HAPPY_FACE_OR_SMILEY TOKEN_EMOJI_SMILING_FACE_WITH_HEART_EYES such lovely'
 ```
 
 ## Supported methods and patterns
@@ -110,12 +131,16 @@ Result:
 'Why TOKEN_NICKNAME is so funny? Check here: __CUSTOM_URL_TOKEN__'
 ```
 
-### 3) Get the text cleanup function (one-liner)
-
-~~Please, try to avoid the in-line method chaining, as it is less readable.~~ Do as your heart tells you.
+### 3) Get the text cleanup function
 
 ```Python
-func = dobbi.clean().url().hashtag().punctuation().whitespace().html().function()
+func = dobbi.clean() \
+    .url() \
+    .hashtag() \
+    .punctuation() \
+    .whitespace() \
+    .html() \
+    .function()
 func('\t #fun #lol    Why  @Alex33 is so... funny? <tag> \nCheck\there: https://some-url.com')
 ```
 
@@ -139,6 +164,23 @@ Result:
 
 ```Python
 'Why is so funny? Check here:'
+```
+
+5) Remove emoji and emoticons
+
+```Python
+em_func = dobbi.clean() \
+    .emoji() \
+    .emoticon() \
+    .punctuation() \
+    .function()
+em_func('Great! =) :D  😍 😋such lovely!?*!!!%&')
+```
+
+Result:
+
+```Python
+'Great such lovely'
 ```
 
 ## Additional
